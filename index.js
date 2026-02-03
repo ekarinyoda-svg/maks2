@@ -1,33 +1,54 @@
-const express = require('express')
-const app = express()
+const express = require("express");
+const app = express();
 const port = 3000;
 
+app.use(express.json());
+
 let department = [
-    {id:1, name: "IT"},
-    {id:2, name: "DBT"},
+  { id: 1, name: "IT" },
+  { id: 2, name: "DBT" },
 ];
 
 app.get("/", (req, res) => {
-    res.send("Mr ekarin.yodamnon");
+  res.send("Hello World!");
 });
 
-app.get("/department", (req, res ) => {
-    res.send(department);
-});
-app.post("/department", (req, res ) => {
-    let newDapartment = {
-        id: department.lendth + 1,
-        name: req.body.name,
-    };
-    department.push( newDapartment);
-    res.send(department);
+app.get("/department", (req, res) => {
+  res.send(department);
 });
 
-app.post("/department", (req, res ) => {
-let newDapartment = 
-res.send(department);
+app.get("/department/:id", (req, res) => {
+  let id = req.params.id;
+  let findD = department.findIndex((e) => e.id == id);
+  if (findD == -1) res.send("ไม่พบข้อมูล");
+  res.send(department[findD]);
+});
+
+app.post("/department", (req, res) => {
+  let newDepartment = {
+    id: department.length + 1,
+    name: req.body.name,
+  };
+  department.push(newDepartment);
+  res.send(newDepartment);
+});
+
+app.put("/department/:id", (req, res) => {
+  let id = req.params.id;
+  let findD = department.findIndex((e) => e.id == id);
+  if (findD == -1) res.send("ไม่พบข้อมูล");
+  department[findD].name = req.body.name;
+  res.send(department[findD]);
+});
+
+app.delete("/department/:id", (req, res) => {
+    let id = req.params.id;
+    let findD = department.findIndex((e) => e.id == id);
+    if (findD == -1) res.send("ไม่พบข้อมูล");
+    let deletD = department.splice(findD, 1);
+    res.send(deletD);
 });
 
 app.listen(port, () => {
-    console.log("server starting on port", port);
+  console.log(`Example app listening on port ${port}`);
 });
